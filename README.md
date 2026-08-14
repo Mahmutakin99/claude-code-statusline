@@ -3,12 +3,14 @@
 A single-file `bash` statusline for [Claude Code](https://docs.claude.com/en/docs/claude-code) that shows your working directory, git branch, active model, context window usage, session cost, and — for Claude subscribers — your 5-hour and 7-day rate limit usage, all in one line.
 
 ```
-isTakipSistemi ⎇main  Sonnet 5 high  ctx 12%  $0.42  session 23%→21:10  week 87%
+my-project ⎇main  Sonnet 5 high  ctx 12%  $0.42  session 23%→21:10  week 87%
 ```
+
+*(`my-project ⎇main` is a placeholder — it always reflects whatever directory and git branch you're currently working in.)*
 
 | Segment | Meaning |
 |---|---|
-| `isTakipSistemi ⎇main` | current directory basename + git branch (if inside a repo) |
+| `my-project ⎇main` | current directory basename + git branch (if inside a repo) |
 | `Sonnet 5 high` | active model + effort level (and `fast` when Fast Mode is on) |
 | `ctx 12%` | context window used |
 | `$0.42` | total cost for the current session |
