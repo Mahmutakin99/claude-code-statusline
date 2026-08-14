@@ -25,9 +25,11 @@ Percentages are colored green (`<60%`), yellow (`60–84%`), or red (`≥85%`) s
 - [`jq`](https://jqlang.org/) — used to parse the JSON Claude Code feeds to the statusline command
 - `git` (optional — only needed for the branch segment)
 
+On **Windows**, [Claude Code runs the status line through Git Bash](https://code.claude.com/docs/en/statusline#windows-configuration) if it's installed (falling back to PowerShell otherwise), so this script works there too as long as Git Bash and `jq` are available — see [Windows](#windows) below.
+
 ## Install
 
-**Option 1 — install script (recommended)**
+**macOS / Linux / Windows (Git Bash) — install script (recommended)**
 
 ```sh
 git clone https://github.com/Mahmutakin99/claude-code-statusline.git
@@ -37,9 +39,9 @@ cd claude-code-statusline
 
 This copies `statusline.sh` to `~/.claude/statusline.sh` and adds/updates the `statusLine` key in `~/.claude/settings.json` (an existing `settings.json` is backed up first, timestamped). Restart Claude Code afterwards.
 
-**Option 2 — manual**
+**Manual install (any OS)**
 
-1. Download `statusline.sh` and place it wherever you like, e.g. `~/.claude/statusline.sh`.
+1. Download `statusline.sh` and place it at `~/.claude/statusline.sh`.
 2. Make it executable: `chmod +x ~/.claude/statusline.sh`.
 3. Add this to `~/.claude/settings.json` (create the file if it doesn't exist):
 
@@ -47,11 +49,25 @@ This copies `statusline.sh` to `~/.claude/statusline.sh` and adds/updates the `s
    {
      "statusLine": {
        "type": "command",
-       "command": "/Users/you/.claude/statusline.sh"
+       "command": "~/.claude/statusline.sh"
      }
    }
    ```
 4. Restart Claude Code, or open a new session.
+
+### Windows
+
+Claude Code needs [Git for Windows](https://git-scm.com/downloads/win) (which provides Git Bash) installed to run this script — without it, Claude Code falls back to invoking your `command` through PowerShell, which can't execute a Bash script directly.
+
+1. Install `jq` for Windows, e.g. with one of:
+   ```powershell
+   winget install jqlang.jq
+   # or: choco install jq
+   # or: scoop install jq
+   ```
+   Make sure the resulting `jq.exe` is on the `PATH` that Git Bash sees (a normal winget/choco/scoop install already takes care of this).
+2. Open **Git Bash** and run either the install script or the manual steps above from inside it — `chmod`, `~`, and the rest behave the same as on macOS/Linux there.
+3. In `settings.json`, keep the path in forward-slash form, e.g. `"command": "~/.claude/statusline.sh"` or `"command": "C:/Users/you/.claude/statusline.sh"`. A Windows-style path with backslashes (`C:\Users\...`) will silently fail — see the [Windows configuration docs](https://code.claude.com/docs/en/statusline#windows-configuration).
 
 ## Customizing
 

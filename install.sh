@@ -11,7 +11,8 @@ SCRIPT_DEST="$CLAUDE_DIR/statusline.sh"
 
 if ! command -v jq >/dev/null 2>&1; then
   echo "Error: jq is required but not installed." >&2
-  echo "Install it first, e.g.: brew install jq" >&2
+  echo "Install it first, e.g.: brew install jq (macOS), apt install jq (Linux)," >&2
+  echo "or winget install jqlang.jq / choco install jq / scoop install jq (Windows, in Git Bash)." >&2
   exit 1
 fi
 
@@ -28,8 +29,17 @@ else
   echo '{}' > "$SETTINGS_FILE"
 fi
 
+# Prefer the portable "~/.claude/statusline.sh" form (works on macOS/Linux/Windows
+# Git Bash alike); fall back to the resolved path when CLAUDE_CONFIG_DIR overrides
+# the default location.
+if [ -n "${CLAUDE_CONFIG_DIR:-}" ]; then
+  cmd_path="$SCRIPT_DEST"
+else
+  cmd_path="~/.claude/statusline.sh"
+fi
+
 tmp="$(mktemp)"
-jq --arg cmd "$SCRIPT_DEST" \
+jq --arg cmd "$cmd_path" \
   '.statusLine = {"type": "command", "command": $cmd}' \
   "$SETTINGS_FILE" > "$tmp"
 mv "$tmp" "$SETTINGS_FILE"

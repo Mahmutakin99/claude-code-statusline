@@ -31,8 +31,8 @@ num() { awk -v v="$1" 'BEGIN{ printf "%d", (v<0?0:v) }'; }
 
 out=""
 
-# working directory
-[ -n "$dir" ] && out="${BLU}$(basename "$dir")${R}"
+# working directory (strip up to the last / or \, since Windows paths use \)
+[ -n "$dir" ] && out="${BLU}${dir##*[/\\]}${R}"
 
 # git branch
 if [ -n "$dir" ] && b=$(git -C "$dir" rev-parse --abbrev-ref HEAD 2>/dev/null); then
@@ -60,7 +60,8 @@ if [ -n "$s_pct" ]; then
   v=$(num "$s_pct")
   out="${out}  ${DIM}session${R} $(hue "$v")${v}%${R}"
   if [ -n "$s_at" ]; then
-    t=$(date -r "$(num "$s_at")" +%H:%M 2>/dev/null)
+    # GNU date (Linux, Git Bash) wants -d @epoch; BSD date (macOS) wants -r epoch
+    t=$(date -d "@$(num "$s_at")" +%H:%M 2>/dev/null) || t=$(date -r "$(num "$s_at")" +%H:%M 2>/dev/null)
     [ -n "$t" ] && out="${out}${DIM}→${t}${R}"
   fi
 fi
